@@ -38,7 +38,7 @@ public class TodoController
 		createdAt = new Date().toString();
 		
 		Todo todoWithDate = new Todo(
-				new String(UUID.randomUUID().toString().replaceAll("-","")),
+				new String(UUID.randomUUID().toString().replaceAll("-","")),//generates a UUID for db key
 				todo.getTitle(),
 				todo.getDescription(),
 				todo.getIsCompleted(),
