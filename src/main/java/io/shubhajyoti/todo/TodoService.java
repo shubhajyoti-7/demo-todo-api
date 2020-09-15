@@ -34,7 +34,7 @@ public class TodoService {
 	{
 		try
 		{
-			return new ResponseEntity<Todo>(todoRepository.findById(id).get(),HttpStatus.OK);
+			return new ResponseEntity<Todo>(todoRepository.findById(id).get(),HttpStatus.OK);//if empty get() throws a NoSuchElementExcpetion
 		}
 		catch(Exception e)
 		{
@@ -59,6 +59,7 @@ public class TodoService {
 	{
 		try
 		{
+
 			getTodoById(id); // Check whether the id exists in the db
 			todo.setTodoId(id);
 			todo.setCreatedAt(new Date().toString());
