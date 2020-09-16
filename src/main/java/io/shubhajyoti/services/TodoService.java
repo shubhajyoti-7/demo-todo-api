@@ -1,9 +1,11 @@
-package io.shubhajyoti.todo;
+package io.shubhajyoti.services;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.shubhajyoti.entities.Todo;
+import io.shubhajyoti.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
