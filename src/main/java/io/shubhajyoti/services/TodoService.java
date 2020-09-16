@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.shubhajyoti.entities.Todo;
+import io.shubhajyoti.interfaces.TodoServiceInterface;
 import io.shubhajyoti.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,77 +14,80 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class TodoService {
+public class TodoService implements TodoServiceInterface {
 	
 	@Autowired
 	private TodoRepository todoRepository;
-	
-	public ResponseEntity<List<Todo>> getAllTodos()
+
+	@Override
+	public List<Todo> getAllTodos()
 	{
 		try
 		{
 			List<Todo> todoList = new ArrayList<Todo>();
 			todoRepository.findAll().forEach(elem -> todoList.add(elem));
-			return new ResponseEntity<List<Todo>>(todoList,HttpStatus.OK);
+			return todoList;
 		}
 		catch(Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Unable to fetch todos!",e);
+			throw e;
 		}
 	}
-	
-	public ResponseEntity<Todo> getTodoById(String id)
+
+	@Override
+	public Todo getTodoById(Long id)
 	{
 		try
 		{
-			return new ResponseEntity<Todo>(todoRepository.findById(id).get(),HttpStatus.OK);//if empty get() throws a NoSuchElementExcpetion
+			return todoRepository.findById(id).get();//if empty get() throws a NoSuchElementExcpetion
 		}
 		catch(Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Todo id not found!",e);
+			throw e;
 		}
 	}
-	
-	public ResponseEntity<String> createTodo(Todo todo)
+
+	@Override
+	public String createTodo(Todo todo)
 	{
 		try
 		{
 			todoRepository.save(todo);
-			return new ResponseEntity<String>("Todo saved!",HttpStatus.CREATED);
+			return "Todo saved";
 		}
 		catch(Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Failed to create the todo. Try again!",e);
+			throw e;
 		}
 	}
-	
-	public ResponseEntity<String> updateTodo(String id,Todo todo)
+
+	@Override
+	public String updateTodo(Long id,Todo todo)
 	{
 		try
 		{
-
-			getTodoById(id); // Check whether the id exists in the db
 			todo.setTodoId(id);
-			todo.setCreatedAt(new Date().toString());
+			todo.setCreatedAt(todoRepository.findById(id).get().getCreatedAt());
 			todoRepository.save(todo);//Updates by overwriting the existing entry with the same id(Key)
-			return new ResponseEntity<String>("Todo updated!",HttpStatus.OK);
+			return "Todo updated!";
 		}
 		catch(Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Updation unsuccessful",e);
+			throw e;
 		}
 	}
-	
-	public ResponseEntity<String> deleteTodo(String id)
+
+	@Override
+	public String deleteTodo(Long id)
 	{
 		try
 		{
 			todoRepository.deleteById(id);
-			return new ResponseEntity<String>("Todo deleted!",HttpStatus.OK);
+			return "Todo deleted!";
 		}
 		catch(Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Deletion unsuccessful!",e);
+			throw e;
 		}
 	}
 	
