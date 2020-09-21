@@ -3,6 +3,7 @@ package io.shubhajyoti.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import io.shubhajyoti.entities.Todo;
 import io.shubhajyoti.interfaces.TodoServiceInterface;
@@ -62,13 +63,29 @@ public class TodoService implements TodoServiceInterface {
 	}
 
 	@Override
-	public String updateTodo(Long id,Todo todo)
+	public String updateTodo(Long id, Map<String,Object> changes)
 	{
 		try
 		{
-			todo.setTodoId(id);
-			todo.setCreatedAt(todoRepository.findById(id).get().getCreatedAt());
-			todoRepository.save(todo);//Updates by overwriting the existing entry with the same id(Key)
+			Todo todo = getTodoById(id);
+			changes.forEach((change,value)->{
+				switch (change)
+				{
+					case "title":
+						todo.setTitle((String)value);
+						break;
+					case "description":
+						todo.setDescription((String)value);
+						break;
+					case "isCompleted":
+						todo.setIsCompleted((Boolean)value);
+						break;
+					default:
+						throw new IllegalStateException();
+				}
+			});
+
+			todoRepository.save(todo);
 			return "Todo updated!";
 		}
 		catch(Exception e)

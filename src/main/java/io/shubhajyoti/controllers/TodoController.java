@@ -2,6 +2,7 @@ package io.shubhajyoti.controllers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import io.shubhajyoti.entities.Todo;
@@ -44,7 +45,7 @@ public class TodoController
 		}
 		catch (Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Todo id not found!",e);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Todo id not found!",e);
 		}
 	}
 	
@@ -60,11 +61,11 @@ public class TodoController
 		}
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT,value="/todos/{id}")
-	public ResponseEntity<String> updateTodo(@PathVariable Long id,@RequestBody Todo todo)
+	@RequestMapping(method=RequestMethod.PATCH,value="/todos/{id}")
+	public ResponseEntity<String> updateTodo(@PathVariable Long id,@RequestBody Map<String,Object> changes)
 	{
 		try {
-			return new ResponseEntity<String>(todoService.updateTodo(id,todo),HttpStatus.OK);
+			return new ResponseEntity<String>(todoService.updateTodo(id,changes),HttpStatus.OK);
 		}
 		catch (Exception e)
 		{
@@ -80,7 +81,7 @@ public class TodoController
 		}
 		catch (Exception e)
 		{
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Deletion unsuccessful!",e);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Deletion unsuccessful!",e);
 		}
 	}
 

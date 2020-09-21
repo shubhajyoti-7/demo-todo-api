@@ -3,6 +3,7 @@ package io.shubhajyoti.interfaces;
 import io.shubhajyoti.entities.Todo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TodoServiceInterface {
 
@@ -12,7 +13,7 @@ public interface TodoServiceInterface {
 
     public String createTodo(Todo todo);
 
-    public String updateTodo(Long id,Todo todo);
+    public String updateTodo(Long id, Map<String,Object> changes);
 
     public String deleteTodo(Long id);
 }
